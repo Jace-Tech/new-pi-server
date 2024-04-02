@@ -10,6 +10,7 @@ import { customResponse } from '../../utils/helpers.js'
 @inject()
 export default class AuthController {
   constructor(protected piService: PiService) {}
+
   async authorizeUser({ request, response }: HttpContext) {
     const data = await authorizeUserValidator.validate(request.body())
 
