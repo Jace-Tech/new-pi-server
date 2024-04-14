@@ -1,0 +1,82 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="utf-8">
+  <title>Mosaic HTML Demo - Sign in</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="/css/vendors/flatpickr.min.css" rel="stylesheet">
+  <link href="/style.css" rel="stylesheet">
+  <script>
+    if (localStorage.getItem('dark-mode') === 'false' || !('dark-mode' in localStorage)) {
+        document.querySelector('html').classList.remove('dark');
+        document.querySelector('html').style.colorScheme = 'light';
+    } else {
+        document.querySelector('html').classList.add('dark');
+        document.querySelector('html').style.colorScheme = 'dark';
+    }
+  </script>    
+<script defer data-domain='preview.cruip.com,rollup.cruip.com' src='https://plausible.cruip.com/js/script.js'></script></head>
+
+<body class="dark:text-slate-400 c3jt4 c6w4h c6vqo c0ndv csf1w">
+
+  <script>
+      if (localStorage.getItem('sidebar-expanded') == 'true') {
+          document.querySelector('body').classList.add('sidebar-expanded');
+      } else {
+          document.querySelector('body').classList.remove('sidebar-expanded');
+      }
+  </script>    
+
+  <main class="bg-white c3jt4">
+      <div class="flex c4ijw">
+          <!-- Content -->
+          <div class="c52db c3ff8">
+
+              <div class="flex cbz56 cfwm1 chmlm crszu">
+
+                  <!-- Header -->
+                  <div class="cy6kd">
+                      <div class="flex items-center cmgwo clpyc cj3hv ciqso c9r0z">
+                          <!-- Logo -->
+                          <a class="block" href="index.html">
+                              <svg width="32" height="32" viewBox="0 0 32 32">
+                                  <defs>
+                                      <linearGradient x1="28.538%" y1="20.229%" x2="100%" y2="108.156%" id="logo-a">
+                                          <stop stop-color="#A5B4FC" stop-opacity="0" offset="0%"></stop>
+                                          <stop stop-color="#A5B4FC" offset="100%"></stop>
+                                      </linearGradient>
+                                      <linearGradient x1="88.638%" y1="29.267%" x2="22.42%" y2="100%" id="logo-b">
+                                          <stop stop-color="#38BDF8" stop-opacity="0" offset="0%"></stop>
+                                          <stop stop-color="#38BDF8" offset="100%"></stop>
+                                      </linearGradient>
+                                  </defs>
+                                  <rect fill="#6366F1" width="32" height="32" rx="16"></rect>
+                                  <path d="M18.277.16C26.035 1.267 32 7.938 32 16c0 8.837-7.163 16-16 16a15.937 15.937 0 01-10.426-3.863L18.277.161z" fill="#4F46E5"></path>
+                                  <path d="M7.404 2.503l18.339 26.19A15.93 15.93 0 0116 32C7.163 32 0 24.837 0 16 0 10.327 2.952 5.344 7.404 2.503z" fill="url(#logo-a)"></path>
+                                  <path d="M2.223 24.14L29.777 7.86A15.926 15.926 0 0132 16c0 8.837-7.163 16-16 16-5.864 0-10.991-3.154-13.777-7.86z" fill="url(#logo-b)"></path>
+                              </svg>
+                          </a>
+                      </div>
+                  </div>
+  
+                  <div class="ciiqv cofxq c3ff8 c9r0z c0ycj">
+      
+                      <h1 class="text-3xl text-slate-800 dark:text-slate-100 font-bold crkc7">Welcome back! ✨</h1>
+                      <button class="btn bg-red-500 ml-3 cfeqx cf1ce ceqwg" href="index.html">Sign In</button>      
+                  </div>
+
+              </div>
+
+          </div>
+
+          <!-- Image -->
+          <div class="hidden c52db c108j csmh2 csp9v cke32 cvqv9" aria-hidden="true">
+              <img class="cq1k0 cbq5m crszu c3ff8" src="/images/auth-image.jpg" width="760" height="1024" alt="Authentication image">
+              <img class="hidden c50r7 co267 csmh2 c5q74 c76e0 c05s4" src="/images/auth-decoration.png" width="218" height="224" alt="Authentication decoration">
+          </div>
+
+      </div>
+
+  </main>
+
+  <script src="/js/vendors/alpinejs.min.js" defer=""></script>
+  <script src="/js/main.js"></script>
+</body></html>

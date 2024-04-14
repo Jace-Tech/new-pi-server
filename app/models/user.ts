@@ -1,8 +1,10 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasOne } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, column, hasMany, hasOne } from '@adonisjs/lucid/orm'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
-import Genre from './genre.js'
-import type { HasOne } from '@adonisjs/lucid/types/relations'
+import type { HasMany, HasOne } from '@adonisjs/lucid/types/relations'
+import { v4 as uuid } from 'uuid'
+import Genre from '#models/genre'
+import Social from '#models/social'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -30,7 +32,13 @@ export default class User extends BaseModel {
   declare country: string | null
 
   @column()
+  declare bio: string | null
+
+  @column()
   declare profileImage: string | null
+
+  @column()
+  declare coverImage: string | null
 
   @column()
   declare shadowBanned: boolean
@@ -46,6 +54,9 @@ export default class User extends BaseModel {
 
   @column()
   declare isPrivate: boolean
+
+  @column()
+  declare gender: string | null
 
   @column()
   declare wallet: string | null
@@ -64,8 +75,15 @@ export default class User extends BaseModel {
   })
 
   // HOOKS
+  @beforeCreate()
+  static assignUuid(user: User) {
+    user.id = uuid()
+  }
 
   // RELATIONSHIPS
   @hasOne(() => Genre)
   declare user: HasOne<typeof Genre>
+
+  @hasMany(() => Social)
+  declare social: HasMany<typeof Social>
 }

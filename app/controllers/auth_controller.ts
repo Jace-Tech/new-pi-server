@@ -33,4 +33,31 @@ export default class AuthController {
     const token = await User.accessTokens.create(user)
     return response.status(200).send(customResponse('Logged in!', { user, token }))
   }
+
+  async authorizeAdmin({ request, view, auth }: HttpContext) {
+    const data = await authorizeUserValidator.validate(request.body())
+
+    const piUserInfo = await this.piService.authenticate(data.accessToken)
+    if (!piUserInfo) throw new NotFoundException('Pioneer not found')
+
+    // CHECK IF USER EXISTS
+    const user = await User.firstOrCreate(
+      { username: piUserInfo.username },
+      {
+        username: piUserInfo.username,
+        id: piUserInfo.uid,
+      }
+    )
+
+    // CHECK USER IS ACTIVE
+    if (!user.isActive) throw new UnAuthorizedException('Unauthorized: Account is not active')
+
+    // SIGN USER IN
+    await auth.use('web').login(user)
+    return view.render('')
+  }
+
+  async loginPage({ view }: HttpContext) {
+    return view.render('login')
+  }
 }
