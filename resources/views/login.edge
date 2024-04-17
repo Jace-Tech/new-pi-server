@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en"><head>
   <meta charset="utf-8">
-  <title>Mosaic HTML Demo - Sign in</title>
+  <title>{{ env.get('APP_NAME') }} - Sign in</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link href="/css/vendors/flatpickr.min.css" rel="stylesheet">
   <link href="/style.css" rel="stylesheet">
@@ -16,7 +16,7 @@
 <script defer data-domain='preview.cruip.com,rollup.cruip.com' src='https://plausible.cruip.com/js/script.js'></script></head>
 
 <body class="dark:text-slate-400 c3jt4 c6w4h c6vqo c0ndv csf1w">
-
+@include('partials/_alert')
   <script>
       if (localStorage.getItem('sidebar-expanded') == 'true') {
           document.querySelector('body').classList.add('sidebar-expanded');
@@ -58,9 +58,13 @@
                   </div>
   
                   <div class="ciiqv cofxq c3ff8 c9r0z c0ycj">
-      
+                    {{  }}
                       <h1 class="text-3xl text-slate-800 dark:text-slate-100 font-bold crkc7">Welcome back! ✨</h1>
-                      <button class="btn bg-red-500 ml-3 cfeqx cf1ce ceqwg" href="index.html">Sign In</button>      
+                        <form action="{{ route('login') }}" method="post">
+                            {{ csrfField() }}
+                            <input hidden id="accessToken" name="accessToken" type="text">
+                            <button id="login" type="button" class="btn bg-red-500 cfeqx cf1ce ceqwg" style="width: 100%">Sign in</button>      
+                        </form>
                   </div>
 
               </div>
@@ -79,4 +83,65 @@
 
   <script src="/js/vendors/alpinejs.min.js" defer=""></script>
   <script src="/js/main.js"></script>
+  <script src="/pi.js"></script>
+  <script src="/index.js"></script>
+
+  <script>
+    const form = document.querySelector("form")
+    const accessTokenInput = document.querySelector("#accessToken")
+    const scopes = ['username', 'payments', 'wallet_address']
+
+
+    function onIncompletePaymentFound(payment) {}
+
+    const handleLogin = (e) => {
+        e.target.innerHTML = "Signing in..."
+        e.target.disabled = true
+
+        Pi.authenticate(scopes, onIncompletePaymentFound)
+            .then(async function (auth) {
+                const payload = {
+                    accessToken: auth.accessToken,
+                    user: {
+                        uid: auth.user.uid,
+                        username: auth.user.username,
+                    }
+                }
+                
+                // SET THE ACCESS TOKEN
+                accessTokenInput.value = auth.accessToken
+
+                // SUBMIT FORM
+                form.submit()
+
+                // const req = await fetch('/auth/login', {
+                //     method: "POST",
+                //     body: JSON.stringify(payload),
+                //     headers: {
+                //         'Content-Type': 'application/json'
+                //     }
+                // })
+                // const res = await req.json()
+                // Swal.fire({
+                //     title: "Login success",
+                //     text: "Redirecting to dashboard",
+                //     icon: "success"
+                // })
+                // setTimeout(() => location.href = res.url, 2000)
+                
+            })
+            .catch(function (error) {
+                console.error(error)
+            })
+            .finally(() => {
+                e.target.innerHTML = "Sign in"
+                e.target.disabled = false
+            })
+    }
+
+    const loginBtn = document.querySelector("#login")
+    loginBtn.addEventListener("click", handleLogin)
+
+
+  </script>
 </body></html>

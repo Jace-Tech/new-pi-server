@@ -4,7 +4,7 @@ import routes from '../routes/index.js'
 
 router.group(routes)
 
-router.get('/', async () => {
+router.get('/health', async () => {
   return {
     app: env.get('APP_NAME', 'Soundpy') + ' API',
     status: 'Running',

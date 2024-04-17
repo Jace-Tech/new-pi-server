@@ -8,6 +8,7 @@
       "#exceptions/*": ["./app/exceptions/*.js"],
       "#models/*": ["./app/models/*.js"],
       "#mails/*": ["./app/mails/*.js"],
+      "#enums/*": ["./app/enums/*.js"],
       "#services/*": ["./app/services/*.js"],
       "#routes/*": ["./app/routes/*.js"],
       "#listeners/*": ["./app/listeners/*.js"],

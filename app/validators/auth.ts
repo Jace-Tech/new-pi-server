@@ -9,3 +9,9 @@ export const authorizeUserValidator = vine.compile(
     }),
   })
 )
+
+export const authorizeAdminValidator = vine.compile(
+  vine.object({
+    accessToken: vine.string().trim(),
+  })
+)

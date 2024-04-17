@@ -1,10 +1,11 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeCreate, column, hasMany, hasOne } from '@adonisjs/lucid/orm'
+import { BaseModel, column, hasMany, hasOne } from '@adonisjs/lucid/orm'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import type { HasMany, HasOne } from '@adonisjs/lucid/types/relations'
-import { v4 as uuid } from 'uuid'
+// import { v4 as uuid } from 'uuid'
 import Genre from '#models/genre'
 import Social from '#models/social'
+import { UserCarrers, UserRole } from '#enums/user'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -73,12 +74,6 @@ export default class User extends BaseModel {
   static accessTokens = DbAccessTokensProvider.forModel(User, {
     expiresIn: '30 days',
   })
-
-  // HOOKS
-  @beforeCreate()
-  static assignUuid(user: User) {
-    user.id = uuid()
-  }
 
   // RELATIONSHIPS
   @hasOne(() => Genre)

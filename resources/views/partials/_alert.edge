@@ -1,0 +1,12 @@
+<script src="/sweetalert.js"></script>
+
+@if(flashMessages.has('notification'))
+  @let(title = flashMessages.get('notification').message)
+  @let(type = flashMessages.get('notification').type)
+  <script>
+    Swal.fire({ 
+      title: title,
+      icon: type
+    })
+  </script>
+@endif

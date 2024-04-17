@@ -12,7 +12,7 @@ export default class extends BaseSchema {
         .references('users.id')
         .onDelete('SET NULL')
         .onUpdate('NO ACTION')
-      table.enum('type', Object.values(ContentTypes)).notNullable()
+      table.enum('type', ['beat', 'music-video', 'song']).notNullable()
       table.string('title').notNullable()
       table
         .uuid('genre_id')

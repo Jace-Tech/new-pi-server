@@ -8,6 +8,6 @@ export default function () {
     router.group(v1).prefix('api')
 
     // ADMIN
-    router.group(admin).prefix('admin')
+    router.group(admin)
   })
 }

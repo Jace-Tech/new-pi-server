@@ -2,7 +2,7 @@ import NotFoundException from '#exceptions/not_found_exception'
 import UnAuthorizedException from '#exceptions/un_authorized_exception'
 import User from '#models/user'
 import PiService from '../services/pi_service.js'
-import { authorizeUserValidator } from '#validators/auth'
+import { authorizeAdminValidator, authorizeUserValidator } from '#validators/auth'
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import { customResponse } from '../../utils/helpers.js'
@@ -34,8 +34,8 @@ export default class AuthController {
     return response.status(200).send(customResponse('Logged in!', { user, token }))
   }
 
-  async authorizeAdmin({ request, view, auth }: HttpContext) {
-    const data = await authorizeUserValidator.validate(request.body())
+  async authorizeAdmin({ request, response, auth }: HttpContext) {
+    const data = await authorizeAdminValidator.validate(request.body())
 
     const piUserInfo = await this.piService.authenticate(data.accessToken)
     if (!piUserInfo) throw new NotFoundException('Pioneer not found')
@@ -46,6 +46,7 @@ export default class AuthController {
       {
         username: piUserInfo.username,
         id: piUserInfo.uid,
+        isActive: true,
       }
     )
 
@@ -54,7 +55,7 @@ export default class AuthController {
 
     // SIGN USER IN
     await auth.use('web').login(user)
-    return view.render('')
+    return response.redirect().toRoute('dashboard')
   }
 
   async loginPage({ view }: HttpContext) {
