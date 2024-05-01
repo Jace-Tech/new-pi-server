@@ -1,10 +1,11 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeCreate, belongsTo, column, hasOne } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, belongsTo, column } from '@adonisjs/lucid/orm'
 import { v4 as uuid } from 'uuid'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 
 import User from '#models/user'
 import Genre from '#models/genre'
+import { ContentTypes } from '#enums/content'
 
 export default class Content extends BaseModel {
   @column({ isPrimary: true })
