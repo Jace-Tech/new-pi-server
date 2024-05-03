@@ -27,6 +27,7 @@
 
   <main class="bg-white c3jt4">
       <div class="flex c4ijw">
+        @include('partials/_alert')
           <!-- Content -->
           <div class="c52db c3ff8">
 
@@ -58,12 +59,30 @@
                   </div>
   
                   <div class="ciiqv cofxq c3ff8 c9r0z c0ycj">
-                      <h1 class="text-3xl text-slate-800 dark:text-slate-100 font-bold crkc7">Welcome back! ✨</h1>
-                        <form action="{{ route('login') }}" method="post">
-                            <input hidden id="accessToken" name="accessToken" type="text">
-                            <button id="login" type="button" class="btn bg-red-500 cfeqx cf1ce ceqwg" style="width: 100%">Sign in</button>      
-                        </form>
-                  </div>
+        
+                    <h1 class="text-3xl text-slate-800 dark:text-slate-100 font-bold crkc7">Welcome back! ✨</h1>
+                    <!-- Form -->
+                    <form method="POST" action="{{ route('register') }}">
+                        <div class="cxebx">
+                            {{ csrfField() }}
+                            <div>
+                                <label class="block text-sm cw92y ci4cg" for="email">Username</label>
+                                <input id="username" class="c03gb c3ff8" type="text" name="username">
+                            </div>
+                            <div>
+                                <label class="block text-sm cw92y ci4cg" for="email">Email Address</label>
+                                <input id="email" class="c03gb c3ff8" type="email" name="email">
+                            </div>
+                            <div>
+                                <label class="block text-sm cw92y ci4cg" for="password">Password</label>
+                                <input id="password" class="c03gb c3ff8" type="password" name="password" autocomplete="on">
+                            </div>
+                        </div>
+                        <div class="flex items-center cmgwo cro1p">
+                            <button class="btn cfeqx cf1ce ceqwg">Sign up</button>
+                        </div>
+                    </form>    
+                </div>
 
               </div>
 
@@ -105,14 +124,12 @@
                         username: auth.user.username,
                     }
                 }
-
-                console.log(payload)
                 
                 // SET THE ACCESS TOKEN
-                // accessTokenInput.value = auth.accessToken
+                accessTokenInput.value = auth.accessToken
 
                 // SUBMIT FORM
-                // form.submit()
+                form.submit()
 
                 // const req = await fetch('/auth/login', {
                 //     method: "POST",

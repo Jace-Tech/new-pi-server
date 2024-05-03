@@ -1,18 +1,32 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasMany, hasOne } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeSave, belongsTo, column } from '@adonisjs/lucid/orm'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
-import type { HasMany, HasOne } from '@adonisjs/lucid/types/relations'
-// import { v4 as uuid } from 'uuid'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import hash from '@adonisjs/core/services/hash'
 import Genre from '#models/genre'
-import Social from '#models/social'
-import { UserCarrers, UserRole } from '#enums/user'
+import { SocialHandleType, UserCareers, UserRole } from '#enums/user'
+import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
+import { compose } from '@adonisjs/core/helpers'
+import { jsonParser } from '../../utils/helpers.js'
+import { Env } from '@adonisjs/core/env'
+import env from '#start/env'
 
-export default class User extends BaseModel {
+const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
+  uids: ['email'],
+  passwordColumnName: 'password',
+})
+
+export default class User extends compose(BaseModel, AuthFinder) {
   @column({ isPrimary: true })
   declare id: string
 
   @column()
   declare username: string
+
+  @column({
+    serialize: () => null,
+  })
+  declare password: string
 
   @column()
   declare email: string | null
@@ -21,7 +35,7 @@ export default class User extends BaseModel {
   declare musicName: string | null
 
   @column()
-  declare musicCarrer: UserCarrers | null
+  declare musicCareer: UserCareers | null
 
   @column()
   declare role: UserRole | null
@@ -35,32 +49,57 @@ export default class User extends BaseModel {
   @column()
   declare bio: string | null
 
-  @column()
+  @column({
+    serialize: (value) => (value ? env.get('APP_URL') + 'uploads/' + value : null),
+  })
   declare profileImage: string | null
 
-  @column()
+  @column({
+    serialize: (value) => (value ? env.get('APP_URL') + 'uploads/' + value : null),
+  })
   declare coverImage: string | null
 
-  @column()
+  @column({
+    serialize: (value: number) => Boolean(value),
+    consume: (value: number) => Boolean(value),
+  })
   declare shadowBanned: boolean
 
-  @column()
+  @column({
+    serialize: (value: number) => Boolean(value),
+    consume: (value: number) => Boolean(value),
+  })
   declare isVerified: boolean
 
-  @column()
+  @column({
+    serialize: (value: number) => Boolean(value),
+    consume: (value: number) => Boolean(value),
+  })
   declare isActive: boolean
 
-  @column()
+  @column({
+    serialize: (value: number) => Boolean(value),
+    consume: (value: number) => Boolean(value),
+  })
   declare isSubscribed: boolean
 
-  @column()
+  @column({
+    serialize: (value: number) => Boolean(value),
+    consume: (value: number) => Boolean(value),
+  })
   declare isPrivate: boolean
+
+  @column({
+    serialize: (value: string) => jsonParser(value),
+    consume: (value: string) => jsonParser(value),
+  })
+  declare socialHandles: SocialHandleType[] | null
 
   @column()
   declare gender: string | null
 
   @column()
-  declare wallet: string | null
+  declare walletBalance: number
 
   @column.dateTime()
   declare lastSubscriptionDate: DateTime | null
@@ -76,9 +115,16 @@ export default class User extends BaseModel {
   })
 
   // RELATIONSHIPS
-  @hasOne(() => Genre)
-  declare user: HasOne<typeof Genre>
+  @belongsTo(() => Genre)
+  declare genre: BelongsTo<typeof Genre>
 
-  @hasMany(() => Social)
-  declare social: HasMany<typeof Social>
+  // @hasMany(() => Social)
+  // declare social: HasMany<typeof Social>
+
+  @beforeSave()
+  static convertToString(user: User) {
+    if (user.$dirty.socialHandles) {
+      user.socialHandles = JSON.stringify(user.socialHandles) as any
+    }
+  }
 }

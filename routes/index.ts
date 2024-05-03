@@ -1,6 +1,7 @@
 import router from '@adonisjs/core/services/router'
 import v1 from './v1/index.js'
 import admin from './admin/index.js'
+import uploadsRoutes from './uploads.routes.js'
 
 export default function () {
   return router.group(() => {
@@ -9,5 +10,8 @@ export default function () {
 
     // ADMIN
     router.group(admin)
+
+    // UPLOADS
+    router.group(uploadsRoutes)
   })
 }

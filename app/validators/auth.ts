@@ -12,6 +12,15 @@ export const authorizeUserValidator = vine.compile(
 
 export const authorizeAdminValidator = vine.compile(
   vine.object({
-    accessToken: vine.string().trim(),
+    email: vine.string(),
+    password: vine.string(),
+  })
+)
+
+export const registerAdminValidator = vine.compile(
+  vine.object({
+    username: vine.string(),
+    email: vine.string(),
+    password: vine.string(),
   })
 )
