@@ -1,7 +1,7 @@
 import { UserCareers, UserSocialHandles } from '#enums/user'
 import vine from '@vinejs/vine'
 
-export const updateUserDetailValidator = vine.compile(
+export const userUpdateDetailValidator = vine.compile(
   vine.object({
     musicName: vine.string().minLength(3).maxLength(50).trim(),
     musicCareer: vine.enum(Object.values(UserCareers)),
@@ -18,15 +18,8 @@ export const updateUserDetailValidator = vine.compile(
   })
 )
 
-export const uploadValidator = vine.compile(
+export const userStatusValidator = vine.compile(
   vine.object({
-    profileImage: vine.file({
-      extnames: ['jpg', 'png', 'jpeg'],
-      size: '5mb',
-    }),
-    coverImage: vine.file({
-      extnames: ['jpg', 'png', 'jpeg'],
-      size: '5mb',
-    }),
+    status: vine.boolean(),
   })
 )

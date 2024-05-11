@@ -10,3 +10,9 @@ export function jsonParser(value: string) {
     return value
   }
 }
+
+export function arrayTransformer(arr: string[] | string) {
+  if (typeof arr === 'string') return arr
+  if (arr.length < 2) return arr[0]
+  return arr
+}

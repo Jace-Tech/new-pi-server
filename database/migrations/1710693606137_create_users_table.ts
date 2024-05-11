@@ -9,6 +9,7 @@ export default class extends BaseSchema {
       table.string('email', 254).nullable().unique()
       table.string('username').notNullable()
       table.string('password').nullable()
+      table.string('pi_user_id').nullable()
       table.string('music_name').nullable()
       table.enum('music_career', ['producer', 'artist', 'music-lover', 'record-label']).nullable()
       table.enum('role', ['user', 'admin']).nullable()

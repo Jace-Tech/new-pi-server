@@ -6,6 +6,7 @@ import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import User from '#models/user'
 import Genre from '#models/genre'
 import { ContentTypes } from '#enums/content'
+import { jsonParser } from '../../utils/helpers.js'
 
 export default class Content extends BaseModel {
   @column({ isPrimary: true })
@@ -32,9 +33,12 @@ export default class Content extends BaseModel {
   @column()
   declare price: number | null
 
+  @column()
+  declare country: string | null
+
   @column({
-    serialize: (value: string) => (value ? JSON.parse(value) : null),
-    consume: (value: string) => (value ? JSON.parse(value) : null),
+    serialize: (value: string) => jsonParser(value),
+    consume: (value: string) => jsonParser(value),
   })
   declare features: string[] | null
 
@@ -51,8 +55,8 @@ export default class Content extends BaseModel {
   declare isActive: boolean | null
 
   @column({
-    serialize: (value: string) => (value ? JSON.parse(value) : null),
-    consume: (value: string) => (value ? JSON.parse(value) : null),
+    serialize: (value: string) => jsonParser(value),
+    consume: (value: string) => jsonParser(value),
   })
   declare metadata: any | null
 
@@ -62,11 +66,13 @@ export default class Content extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
+  // HOOKS
   @beforeCreate()
-  static assignUuid(content: Content) {
+  static async assignUuid(content: Content) {
     content.id = uuid()
   }
 
+  // RELATIONSHIPS
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
 

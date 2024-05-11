@@ -1,15 +1,23 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeSave, belongsTo, column } from '@adonisjs/lucid/orm'
+import {
+  BaseModel,
+  beforeCreate,
+  beforeSave,
+  belongsTo,
+  column,
+  hasMany,
+} from '@adonisjs/lucid/orm'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
-import type { BelongsTo } from '@adonisjs/lucid/types/relations'
-import hash from '@adonisjs/core/services/hash'
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import Genre from '#models/genre'
 import { SocialHandleType, UserCareers, UserRole } from '#enums/user'
-import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
-import { compose } from '@adonisjs/core/helpers'
 import { jsonParser } from '../../utils/helpers.js'
-import { Env } from '@adonisjs/core/env'
 import env from '#start/env'
+import Follower from './follower.js'
+import { compose } from '@adonisjs/core/helpers'
+import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
+import hash from '@adonisjs/core/services/hash'
+import { v4 as uuid } from 'uuid'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -22,6 +30,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @column()
   declare username: string
+
+  @column()
+  declare piUserId: string
 
   @column({
     serialize: () => null,
@@ -114,12 +125,11 @@ export default class User extends compose(BaseModel, AuthFinder) {
     expiresIn: '30 days',
   })
 
-  // RELATIONSHIPS
-  @belongsTo(() => Genre)
-  declare genre: BelongsTo<typeof Genre>
-
-  // @hasMany(() => Social)
-  // declare social: HasMany<typeof Social>
+  // HOOKS
+  @beforeCreate()
+  static assignUuid(user: User) {
+    user.id = uuid()
+  }
 
   @beforeSave()
   static convertToString(user: User) {
@@ -127,4 +137,14 @@ export default class User extends compose(BaseModel, AuthFinder) {
       user.socialHandles = JSON.stringify(user.socialHandles) as any
     }
   }
+
+  // RELATIONSHIPS
+  @belongsTo(() => Genre)
+  declare genre: BelongsTo<typeof Genre>
+
+  @hasMany(() => Follower, { foreignKey: 'userId' })
+  declare followers: HasMany<typeof Follower>
+
+  @hasMany(() => Follower, { foreignKey: 'followerId' })
+  declare following: HasMany<typeof Follower>
 }
