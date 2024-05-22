@@ -36,3 +36,12 @@ export const updateContentValidator = vine.compile(
     }),
   })
 )
+
+export const updateVerificationStatus = vine.compile(
+  vine.object({
+    status: vine.boolean(),
+    params: vine.object({
+      id: vine.string().uuid(),
+    }),
+  })
+)

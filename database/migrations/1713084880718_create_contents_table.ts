@@ -33,6 +33,7 @@ export default class extends BaseSchema {
       table.json('features').nullable()
       table.boolean('is_deleted').defaultTo(false)
       table.boolean('is_active').defaultTo(false)
+      table.boolean('is_verfied').defaultTo(false)
       table.json('metadata').nullable()
       table.timestamp('created_at')
       table.timestamp('updated_at')

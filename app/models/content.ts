@@ -53,13 +53,19 @@ export default class Content extends BaseModel {
     serialize: (value: number) => Boolean(value),
     consume: (value: number) => Boolean(value),
   })
-  declare isDeleted: boolean | null
+  declare isDeleted: boolean
 
   @column({
     serialize: (value: number) => Boolean(value),
     consume: (value: number) => Boolean(value),
   })
-  declare isActive: boolean | null
+  declare isActive: boolean
+
+  @column({
+    serialize: (value: number) => Boolean(value),
+    consume: (value: number) => Boolean(value),
+  })
+  declare isVerified: boolean
 
   @column({
     serialize: (value: string) => jsonParser(value),

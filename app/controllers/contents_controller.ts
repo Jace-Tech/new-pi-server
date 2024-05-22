@@ -6,7 +6,11 @@ import Content from '#models/content'
 import Transaction from '#models/transaction'
 import ContentPolicy from '#policies/content_policy'
 import LocationService from '#services/location_service'
-import { createContentValidator, updateContentValidator } from '#validators/content'
+import {
+  createContentValidator,
+  updateContentValidator,
+  updateVerificationStatus,
+} from '#validators/content'
 import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 import { customResponse } from '../../utils/helpers.js'
@@ -127,7 +131,7 @@ export default class ContentsController {
     if (await bouncer.with(ContentPolicy).denies('delete', content))
       throw new UnAuthorizedException("Unauthorized: Can't delete content")
 
-    // SOME CHECKS ON VERIFICATION OF CONTENT
+    // SOME CHECKS ON VERIFICATION OF CONTENT (REMEMBER TO CREATE A COLUMN IN THE CLAIM PAY TABLE )
 
     // UPDATE CONTENT DELETED STATUS
     content.isDeleted = true
@@ -140,5 +144,16 @@ export default class ContentsController {
     )
 
     return response.status(200).send(customResponse('Content deleted!', content))
+  }
+
+  async verifyContent({ request, response }: HttpContext) {
+    const payload = await request.validateUsing(updateVerificationStatus)
+
+    const content = await Content.find(payload.params.id)
+    if (!content) throw new NotFoundException('Content does not exist')
+
+    content.isVerified = payload.status
+    await content.save()
+    return response.status(200).send(customResponse('Content status updated!', content))
   }
 }
