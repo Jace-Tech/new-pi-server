@@ -1,22 +1,29 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeCreate, belongsTo, column } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, belongsTo, column, hasOne } from '@adonisjs/lucid/orm'
 import { v4 as uuid } from 'uuid'
-import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import type { BelongsTo, HasOne } from '@adonisjs/lucid/types/relations'
 
 import User from '#models/user'
 import Genre from '#models/genre'
 import { ContentTypes } from '#enums/content'
 import { jsonParser } from '../../utils/helpers.js'
+import Transaction from './transaction.js'
 
 export default class Content extends BaseModel {
   @column({ isPrimary: true })
   declare id: string
 
   @column()
+  declare title: string
+
+  @column()
   declare userId: string
 
   @column()
-  declare type: ContentTypes | null
+  declare transactionId: string
+
+  @column()
+  declare type: ContentTypes
 
   @column()
   declare genreId: string | null
@@ -78,4 +85,7 @@ export default class Content extends BaseModel {
 
   @belongsTo(() => Genre)
   declare genre: BelongsTo<typeof Genre>
+
+  @hasOne(() => Transaction)
+  declare transaction: HasOne<typeof Transaction>
 }

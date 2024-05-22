@@ -59,6 +59,7 @@
     "@adonisjs/lucid": "^20.1.0",
     "@adonisjs/session": "^7.3.0",
     "@adonisjs/static": "^1.1.1",
+    "@pusher/push-notifications-server": "^1.2.6",
     "@vinejs/vine": "^1.7.1",
     "axios": "^1.6.8",
     "edge.js": "^6.0.2",

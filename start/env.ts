@@ -51,4 +51,12 @@ export default await Env.create(new URL('../', import.meta.url), {
   |----------------------------------------------------------
   */
   ABSTRACT_API_KEY: Env.schema.string(),
+
+  /*
+  |----------------------------------------------------------
+  | Variables for configuring abstract api
+  |----------------------------------------------------------
+  */
+  PUSHER_INSTANCE_ID: Env.schema.string(),
+  PUSHER_SECRET_KEY: Env.schema.string(),
 })

@@ -12,6 +12,12 @@ export default class extends BaseSchema {
         .references('users.id')
         .onDelete('SET NULL')
         .onUpdate('NO ACTION')
+      table
+        .uuid('transaction_id')
+        .nullable()
+        .references('transactions.id')
+        .onDelete('SET NULL')
+        .onUpdate('NO ACTION')
       table.enum('type', ['beat', 'music-video', 'song']).notNullable()
       table.string('title').notNullable()
       table

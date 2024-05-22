@@ -12,4 +12,6 @@
 |
 */
 
-export const policies = {}
+export const policies = {
+  ContentPolicy: () => import('#policies/content_policy')
+}

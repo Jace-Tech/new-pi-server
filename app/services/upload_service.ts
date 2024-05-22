@@ -4,7 +4,7 @@ import app from '@adonisjs/core/services/app'
 import fs from 'node:fs'
 import { normalize } from 'node:path'
 
-type UploadPathType = 'content' | 'profile'
+type UploadPathType = 'content' | 'profile' | 'artwork' | 'display_cut'
 
 export default class UploadService {
   static async upload(file: MultipartFile | null, path: UploadPathType = 'profile') {
