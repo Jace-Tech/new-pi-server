@@ -8,6 +8,7 @@ import ContentPolicy from '#policies/content_policy'
 import LocationService from '#services/location_service'
 import {
   createContentValidator,
+  fetchContentValidator,
   updateContentValidator,
   updateVerificationStatus,
 } from '#validators/content'
@@ -15,6 +16,8 @@ import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 import { customResponse } from '../../utils/helpers.js'
 import UploadService from '#services/upload_service'
+import ContentBuilder from '../builders/content.js'
+import User from '#models/user'
 
 inject()
 export default class ContentsController {
@@ -68,15 +71,35 @@ export default class ContentsController {
     response.status(201).send(customResponse('Content created!', newContent))
   }
 
-  async fetchContents({ request, response }: HttpContext) {
-    const { page = 1, per_page: perPage = 10 } = request.qs()
+  async fetchContents({ request, response, auth }: HttpContext) {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const { page = 1, per_page: perPage = 10, is_featured } = request.qs()
+    const query = Content.query().where('is_active', true).andWhere('is_deleted', false)
 
-    const contents = await Content.query()
-      .where('is_active', true)
-      .andWhere('is_deleted', false)
-      .paginate(page, perPage)
+    // CHECK IF IS_FEATURED IS PASSED
+    if (is_featured) query.andWhere('is_featured', true)
+
+    // FETCH ALL CONTENTS
+    const contents = await ContentBuilder.personalizeContent(
+      auth.user as User,
+      await query.paginate(page, perPage)
+    )
 
     response.status(200).send(customResponse('All contents', contents))
+  }
+
+  async fetchContent({ request, response, auth }: HttpContext) {
+    const payload = await request.validateUsing(fetchContentValidator)
+    const content = await Content.query()
+      .where('id', payload.params.id)
+      .preload('genre')
+      .preload('user')
+      .preload('transaction')
+      .preload('likes')
+      .preload('comments')
+
+    const result = await ContentBuilder.personalizeContent(auth.user as User, content)
+    response.status(200).send(customResponse('Content', result))
   }
 
   async fetchDeletedContents({ request, response }: HttpContext) {
@@ -97,7 +120,7 @@ export default class ContentsController {
     response.status(200).send(customResponse('All contents', contents))
   }
 
-  async updateContent({ request, response, bouncer }: HttpContext) {
+  async updateContent({ request, response, bouncer, auth }: HttpContext) {
     const payload = await request.validateUsing(updateContentValidator)
 
     // CHECK IF CONTENT EXISTS
@@ -117,7 +140,8 @@ export default class ContentsController {
     await content.load('transaction')
     await content.load('user')
 
-    return response.status(200).send(customResponse('Content updated!', content))
+    const result = await ContentBuilder.personalizeContent(auth.user as User, content)
+    return response.status(200).send(customResponse('Content updated!', result))
   }
 
   async deleteContent({ request, response, bouncer, auth }: HttpContext) {
@@ -143,7 +167,8 @@ export default class ContentsController {
       `${auth.user?.musicName || auth.user?.username} deleted a content ${content.title}`
     )
 
-    return response.status(200).send(customResponse('Content deleted!', content))
+    const result = await ContentBuilder.personalizeContent(auth.user as User, content)
+    return response.status(200).send(customResponse('Content deleted!', result))
   }
 
   async verifyContent({ request, response }: HttpContext) {

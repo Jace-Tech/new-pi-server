@@ -37,6 +37,7 @@
     "@adonisjs/eslint-config": "^1.2.1",
     "@adonisjs/prettier-config": "^1.2.1",
     "@adonisjs/tsconfig": "^1.2.1",
+    "@faker-js/faker": "^8.4.1",
     "@japa/api-client": "^2.0.2",
     "@japa/assert": "^2.1.0",
     "@japa/plugin-adonisjs": "^3.0.0",
@@ -65,6 +66,7 @@
     "edge.js": "^6.0.2",
     "luxon": "^3.4.4",
     "mysql2": "^3.9.2",
+    "pg": "^8.11.5",
     "pm2": "^5.4.0",
     "reflect-metadata": "^0.2.1",
     "uuid": "^9.0.1"

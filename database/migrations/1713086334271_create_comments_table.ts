@@ -8,7 +8,7 @@ export default class extends BaseSchema {
       table.uuid('id').primary()
       table.uuid('user_id').references('users.id').onDelete('CASCADE').onUpdate('NO ACTION')
       table.uuid('content_id').references('contents.id').onDelete('CASCADE').onUpdate('NO ACTION')
-      table.text('comment').notNullable()
+      table.string('message', 500).notNullable()
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

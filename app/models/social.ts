@@ -7,6 +7,9 @@ export default class Social extends BaseModel {
   declare id: string
 
   @column()
+  declare userId: string
+
+  @column()
   declare name: string
 
   @column()

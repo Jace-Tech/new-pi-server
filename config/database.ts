@@ -18,6 +18,21 @@ const dbConfig = defineConfig({
         paths: ['database/migrations'],
       },
     },
+    postgres: {
+      client: 'pg',
+      connection: {
+        host: env.get('DB_HOST'),
+        port: env.get('DB_PORT'),
+        user: env.get('DB_USER'),
+        password: env.get('DB_PASSWORD'),
+        database: env.get('DB_DATABASE'),
+        connectionString: env.get('PG_URI'),
+      },
+      migrations: {
+        naturalSort: true,
+        paths: ['database/migrations'],
+      },
+    },
   },
 })
 

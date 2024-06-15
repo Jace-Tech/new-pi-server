@@ -9,5 +9,5 @@ export default function () {
   router.post('/', [AuthController, 'authorizeUser'])
 
   // GET AUTHORIZED USER
-  router.get('/user', [UsersController, 'getAuthenticatedUser']).use(middleware.auth())
+  router.get('/user', [UsersController, 'getAuthenticatedUser']).use([middleware.auth()])
 }

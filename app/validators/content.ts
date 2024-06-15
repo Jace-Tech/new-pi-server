@@ -45,3 +45,11 @@ export const updateVerificationStatus = vine.compile(
     }),
   })
 )
+
+export const fetchContentValidator = vine.compile(
+  vine.object({
+    params: vine.object({
+      id: vine.string().uuid(),
+    }),
+  })
+)

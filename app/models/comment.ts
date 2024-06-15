@@ -1,9 +1,10 @@
 import { DateTime } from 'luxon'
-import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
-import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import { BaseModel, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 
 import User from '#models/user'
 import Content from '#models/content'
+import Reply from './reply.js'
 
 export default class Comment extends BaseModel {
   @column({ isPrimary: true })
@@ -16,7 +17,7 @@ export default class Comment extends BaseModel {
   declare contentId: string
 
   @column()
-  declare comment: string
+  declare message: string
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -29,4 +30,7 @@ export default class Comment extends BaseModel {
 
   @belongsTo(() => Content)
   declare content: BelongsTo<typeof Content>
+
+  @hasMany(() => Reply)
+  declare replies: HasMany<typeof Reply>
 }

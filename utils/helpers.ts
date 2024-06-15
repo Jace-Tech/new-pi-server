@@ -16,3 +16,8 @@ export function arrayTransformer(arr: string[] | string) {
   if (arr.length < 2) return arr[0]
   return arr
 }
+
+export function randomChoice<T>(arr: T[]): T {
+  const randIndex = Math.floor(Math.random() * arr.length)
+  return arr[randIndex]
+}

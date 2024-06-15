@@ -59,4 +59,5 @@ export default await Env.create(new URL('../', import.meta.url), {
   */
   PUSHER_INSTANCE_ID: Env.schema.string(),
   PUSHER_SECRET_KEY: Env.schema.string(),
+  PG_URI: Env.schema.string.optional(),
 })
