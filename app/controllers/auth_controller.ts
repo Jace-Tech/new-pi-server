@@ -61,21 +61,26 @@ export default class AuthController {
     const piUserInfo = await this.piService.authenticate(data.accessToken)
     if (!piUserInfo) throw new NotFoundException('Pioneer not found')
 
-    // CHECK IF USER EXISTS
-    const exists = await User.findBy('role', UserRole.ADMIN)
-    if (exists) throw new BadRequestException('Admin already exist')
-
     // CHECK PASS-PHRASE
     if (data.passphrase !== env.get('ADMIN_PASSPHRASE'))
       throw new BadRequestException('Invalid passphrase')
 
-    // CREATE NEW ADMIN
-    const admin = await User.create({
-      username: piUserInfo.username,
-      piUserId: piUserInfo.uid,
-      isActive: true,
-      role: UserRole.ADMIN,
-    })
+    // CHECK IF USER EXISTS
+    let admin: User
+    const exists = await User.findBy('role', UserRole.ADMIN)
+    if (exists) {
+      if (exists.username !== data.user.username || exists.piUserId !== data.user.uid)
+        throw new UnAuthorizedException("Unauthorized: can't access this route")
+      admin = exists
+    } else {
+      // CREATE NEW ADMIN
+      admin = await User.create({
+        username: piUserInfo.username,
+        piUserId: piUserInfo.uid,
+        isActive: true,
+        role: UserRole.ADMIN,
+      })
+    }
 
     // SIGN USER IN
     const token = await User.accessTokens.create(admin)
