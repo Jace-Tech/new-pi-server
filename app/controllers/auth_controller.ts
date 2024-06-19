@@ -12,6 +12,7 @@ import { inject } from '@adonisjs/core'
 import { customResponse } from '../../utils/helpers.js'
 import { UserRole } from '#enums/user'
 import BadRequestException from '#exceptions/bad_request_exception'
+import env from '#start/env'
 
 @inject()
 export default class AuthController {
@@ -54,6 +55,10 @@ export default class AuthController {
     // CHECK IF USER EXISTS
     const exists = await User.findBy('role', UserRole.ADMIN)
     if (exists) throw new BadRequestException('Admin already exist')
+
+    // CHECK PASS-PHRASE
+    if (data.passphrase !== env.get('ADMIN_PASSPHRASE'))
+      throw new BadRequestException('Invalid passphrase')
 
     // CREATE NEW ADMIN
     const admin = await User.create({

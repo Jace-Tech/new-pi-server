@@ -17,8 +17,7 @@ export const authorizeAdminValidator = vine.compile(
       uid: vine.string(),
       username: vine.string(),
     }),
-    email: vine.string(),
-    password: vine.string(),
+    passphrase: vine.string(),
   })
 )
 
