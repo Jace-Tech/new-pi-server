@@ -34,11 +34,6 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare piUserId: string
 
-  @column({
-    serialize: () => null,
-  })
-  declare password: string
-
   @column()
   declare email: string | null
 

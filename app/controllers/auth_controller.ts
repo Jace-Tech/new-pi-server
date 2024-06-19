@@ -2,11 +2,7 @@ import NotFoundException from '#exceptions/not_found_exception'
 import UnAuthorizedException from '#exceptions/un_authorized_exception'
 import User from '#models/user'
 import PiService from '../services/pi_service.js'
-import {
-  authorizeAdminValidator,
-  authorizeUserValidator,
-  loginAdminValidator,
-} from '#validators/auth'
+import { authorizeAdminValidator, authorizeUserValidator } from '#validators/auth'
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import { customResponse } from '../../utils/helpers.js'
@@ -46,6 +42,19 @@ export default class AuthController {
     return response.status(200).send(customResponse('Logged in!', { user, token }))
   }
 
+  async getAuthenticatedAdmin({ auth, response }: HttpContext) {
+    const admin = await User.query()
+      .where('id', auth.user!.id)
+      .preload('followers')
+      .preload('following')
+      .preload('genre')
+      .first()
+
+    if (!admin) throw new NotFoundException("Can't find admin")
+
+    return response.status(200).send(customResponse('Admin details!', admin))
+  }
+
   async registerAdmin({ request, response }: HttpContext) {
     const data = await authorizeAdminValidator.validate(request.body())
 
@@ -69,19 +78,6 @@ export default class AuthController {
     })
 
     // SIGN USER IN
-    const token = await User.accessTokens.create(admin)
-    await admin.refresh()
-    await admin.load('followers')
-    await admin.load('following')
-    await admin.load('genre')
-    return response.status(200).send(customResponse('Logged in!', { admin, token }))
-  }
-
-  async loginAdmin({ request, response }: HttpContext) {
-    const data = await loginAdminValidator.validate(request.body())
-    const admin = await User.verifyCredentials(data.email, data.password)
-
-    // SIGN ADMIN IN
     const token = await User.accessTokens.create(admin)
     await admin.refresh()
     await admin.load('followers')
