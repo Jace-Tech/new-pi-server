@@ -16,9 +16,13 @@ export default class AuthController {
 
   async authorizeUser({ request, response }: HttpContext) {
     const data = await authorizeUserValidator.validate(request.body())
+    let isNew = true
 
     const piUserInfo = await this.piService.authenticate(data.accessToken)
     if (!piUserInfo) throw new NotFoundException('Pioneer not found')
+
+    const exists = await User.findBy('username', piUserInfo.username)
+    if (exists) isNew = false
 
     // CHECK IF USER EXISTS
     const user = await User.firstOrCreate(
@@ -39,7 +43,8 @@ export default class AuthController {
     await user.load('followers')
     await user.load('following')
     await user.load('genre')
-    return response.status(200).send(customResponse('Logged in!', { user, token }))
+
+    return response.status(200).send(customResponse('Logged in!', { user, token, isNew }))
   }
 
   async getAuthenticatedAdmin({ auth, response }: HttpContext) {
